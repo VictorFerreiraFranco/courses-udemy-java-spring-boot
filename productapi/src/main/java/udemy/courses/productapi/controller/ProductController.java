@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import udemy.courses.productapi.model.Product;
 import udemy.courses.productapi.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,5 +44,10 @@ public class ProductController {
     public void update(@PathVariable String id, @RequestBody Product product) {
         product.setId(id);
         productRepository.save(product);
+    }
+
+    @GetMapping
+    public List<Product> findAll(@RequestParam("name") String name) {
+        return productRepository.findByName(name);
     }
 }

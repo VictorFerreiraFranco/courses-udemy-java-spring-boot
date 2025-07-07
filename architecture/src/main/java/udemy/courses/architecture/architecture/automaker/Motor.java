@@ -5,7 +5,7 @@ public class Motor {
     private String horsepower;
     private String cylinders;
     private Double literage;
-    private TypeMotor $type;
+    private TypeMotor type;
 
     public String getModel() {
         return model;
@@ -39,11 +39,22 @@ public class Motor {
         this.literage = literage;
     }
 
-    public TypeMotor get$type() {
-        return $type;
+    public TypeMotor getType() {
+        return type;
     }
 
-    public void set$type(TypeMotor $type) {
-        this.$type = $type;
+    public void setType(TypeMotor type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Motor{" +
+                "model='" + model + '\'' +
+                ", horsepower='" + horsepower + '\'' +
+                ", cylinders='" + cylinders + '\'' +
+                ", literage=" + literage +
+                ", type=" + type +
+                '}';
     }
 }

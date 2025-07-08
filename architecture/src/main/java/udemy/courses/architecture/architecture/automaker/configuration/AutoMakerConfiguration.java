@@ -2,6 +2,7 @@ package udemy.courses.architecture.architecture.automaker.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import udemy.courses.architecture.architecture.automaker.Motor;
 import udemy.courses.architecture.architecture.automaker.TypeMotor;
 
@@ -9,6 +10,7 @@ import udemy.courses.architecture.architecture.automaker.TypeMotor;
 public class AutoMakerConfiguration {
 
     @Bean(name = "motorAspirated")
+    @Primary
     public Motor motorAspirated() {
         Motor motor = new Motor();
 

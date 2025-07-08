@@ -13,7 +13,8 @@ import udemy.courses.architecture.architecture.automaker.*;
 public class FactoryController {
 
     @Autowired
-    @Qualifier("motorElectric")
+    @Turbo
+//    @Qualifier("motorElectric")
     private Motor motor;
 
     @PostMapping

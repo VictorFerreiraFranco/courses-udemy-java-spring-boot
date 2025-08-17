@@ -20,6 +20,9 @@ public class Application {
 		builder.bannerMode(Banner.Mode.OFF);
 		builder.profiles("Production");
 
+		// Indica que os beans serão carregados conforme forem solicitados
+		// builder.lazyInitialization(true);
+
 		builder.run(args);
 
 		ConfigurableApplicationContext context = builder.context();

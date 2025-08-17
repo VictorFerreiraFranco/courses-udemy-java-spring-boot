@@ -1,10 +1,19 @@
 package udemy.courses.architecture.architecture.automaker.configuration;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 import udemy.courses.architecture.architecture.automaker.Motor;
 import udemy.courses.architecture.architecture.automaker.TypeMotor;
+
+// Configuraçõoes dos bens
+// @Component
+// @Lazy - Faz ser carragado somente quando solicitar
+// @Scope(BeanDefinition.SCOPE_SINGLETON) - Unica p/ aplicação independete do usuario ou cessão
+// @Scope(WebApplicationContext.SCOPE_REQUEST) - Por requisição
+// @Scope(WebApplicationContext.SCOPE_SESSION) - Por sessão de usuario
+// @Scope(WebApplicationContext.SCOPE_APPLICATION) - por sessão da aplicação, unico para todos user
 
 @Configuration
 public class AutoMakerConfiguration {

@@ -10,6 +10,7 @@ import udemy.courses.libraryapi.model.GenderBook;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -87,5 +88,11 @@ class BookRepositoryTest {
 
         System.out.println("Book:" + book.getTitle());
         System.out.println("Author:" + book.getAuthor().getName());
+    }
+
+    @Test
+    void findByTitleTest(){
+        List<Book> books = bookRepository.findByTitle("Book Title");
+        books.forEach(System.out::println);
     }
 }

@@ -11,4 +11,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     List<Book> findByAuthor(Author author);
 
+    List<Book> findByTitle(String title);
+
 }

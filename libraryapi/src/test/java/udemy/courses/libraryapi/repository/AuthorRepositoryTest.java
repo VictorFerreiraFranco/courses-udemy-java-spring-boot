@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import udemy.courses.libraryapi.model.Author;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,5 +41,29 @@ public class AuthorRepositoryTest {
 
             repository.save(author);
         }
+    }
+
+    @Test
+    public void listTest(){
+        List<Author> authors = repository.findAll();
+        authors.forEach(System.out::println);
+    }
+
+    @Test
+    public void countTest(){
+        System.out.println("Author count: " + repository.count());
+    }
+
+    @Test
+    public void deleteByIdTest(){
+        var id = UUID.fromString("cab40730-e8d6-40fb-857f-c3616d9f5f4f");
+        repository.deleteById(id);
+    }
+
+    @Test
+    public void deleteTest(){
+        var id = UUID.fromString("cab40730-e8d6-40fb-857f-c3616d9f5f4f");
+        var author = repository.findById(id).get();
+        repository.delete(author);
     }
 }

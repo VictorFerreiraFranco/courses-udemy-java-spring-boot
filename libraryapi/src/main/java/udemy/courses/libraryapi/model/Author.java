@@ -30,8 +30,7 @@ public class Author {
     @Column(length = 100, nullable = false)
     private String nationality;
 
-//    @OneToMany(mappedBy = "author")
-    @Transient
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books;
 }
 

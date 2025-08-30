@@ -1,12 +1,15 @@
 package udemy.courses.libraryapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.model.Book;
 import udemy.courses.libraryapi.model.GenderBook;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,4 +47,14 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query("select l from Book l where l.gender = ?1 order by ?2")
     List<Book> findAllByGenderPositionalParameter(GenderBook genderBook, String columnOrder);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Book where gender = ?1")
+    void deleteByGender(GenderBook genderBook);
+
+    @Modifying
+    @Transactional
+    @Query("update Book set publishDate = ?1")
+    void updatePublishDate(LocalDate date);
 }

@@ -95,4 +95,28 @@ class BookRepositoryTest {
         List<Book> books = bookRepository.findByTitle("Book Title");
         books.forEach(System.out::println);
     }
+
+    @Test
+    void findByTitleLikeTest(){
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase("Book");
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void findByTitleWithQueryTest(){
+        List<Book> books = bookRepository.findByAllPersonalized();
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void findAuthorByBookQueryTest(){
+        List<Author> books = bookRepository.findAuthorByBookPersonalized();
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void findAllGenderAuthorBrazilianTest(){
+        List<String> books = bookRepository.findAllGenderAuthorBrazilian();
+        books.forEach(System.out::println);
+    }
 }

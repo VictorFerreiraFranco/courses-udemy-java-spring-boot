@@ -40,4 +40,24 @@ class BookRepositoryTest {
         bookRepository.save(book);
     }
 
+    @Test
+    void saveCascadeTest(){
+        Book book = new Book();
+
+        book.setIsbn("3434-34334");
+        book.setTitle("Book Title");
+        book.setPrice(BigDecimal.valueOf(12.34));
+        book.setGender(GenderBook.FANTASY);
+        book.setPublishDate(LocalDate.of(2015,10,10));
+
+        Author author = new Author();
+        author.setName("João da Silva");
+        author.setNationality("Brazilian");
+        author.setBirthDate(LocalDate.of(1995, 1, 1));
+
+        book.setAuthor(author);
+
+        bookRepository.save(book);
+    }
+
 }

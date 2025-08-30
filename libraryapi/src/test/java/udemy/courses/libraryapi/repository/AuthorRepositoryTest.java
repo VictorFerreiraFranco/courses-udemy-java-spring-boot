@@ -1,8 +1,10 @@
 package udemy.courses.libraryapi.repository;
 
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.model.Book;
 import udemy.courses.libraryapi.model.GenderBook;
@@ -103,5 +105,16 @@ public class AuthorRepositoryTest {
         author.getBooks().add(book2);
 
         authorRepository.save(author);
+    }
+
+    @Test
+    public void listBooksByAuthorTest(){
+        var id = UUID.fromString("67577ff2-a8aa-4755-8ee6-c67609234dc4");
+        var author = authorRepository.findById(id).get();
+
+        List<Book> listBook = bookRepository.findByAuthor(author);
+        author.setBooks(listBook);
+
+        author.getBooks().forEach(System.out::println);
     }
 }

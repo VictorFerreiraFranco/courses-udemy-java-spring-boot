@@ -60,4 +60,20 @@ class BookRepositoryTest {
         bookRepository.save(book);
     }
 
+
+    @Test
+    void updateAuthorByBookTest()
+    {
+        var book = bookRepository
+                .findById(UUID.fromString("dcd467ce-f2d0-4dbe-9965-c553eea2d7db"))
+                .orElse(null);
+
+        var author = authorRepository
+                .findById(UUID.fromString("e4523dda-4059-48ab-aaab-4c3fefc63191"))
+                .orElse(null);
+
+        book.setAuthor(author);
+
+        bookRepository.save(book);
+    }
 }

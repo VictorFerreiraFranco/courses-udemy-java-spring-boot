@@ -3,15 +3,20 @@ package udemy.courses.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table
 @Data
 @ToString(exclude = {"author"})
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
 
     @Id
@@ -42,5 +47,14 @@ public class Book {
     @JoinColumn(name = "id_author")
     private Author author;
 
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "id_user")
+    private UUID idUser;
 }

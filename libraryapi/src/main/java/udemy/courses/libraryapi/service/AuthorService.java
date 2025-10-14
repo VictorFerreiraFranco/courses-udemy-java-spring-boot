@@ -3,6 +3,7 @@ package udemy.courses.libraryapi.service;
 import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.repository.AuthorRepository;
+import udemy.courses.libraryapi.validator.AuthorValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,12 +13,15 @@ import java.util.UUID;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final AuthorValidator authorValidator;
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
         this.authorRepository = authorRepository;
+        this.authorValidator = authorValidator;
     }
 
     public Author save(Author author) {
+        authorValidator.validate(author);
         return authorRepository.save(author);
     }
 
@@ -26,6 +30,7 @@ public class AuthorService {
         if (author.getId() == null)
             throw new IllegalArgumentException("Author id is null");
 
+        authorValidator.validate(author);
         authorRepository.save(author);
     }
 

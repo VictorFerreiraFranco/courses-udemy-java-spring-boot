@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import udemy.courses.libraryapi.controller.dto.AuthorDTO;
+import udemy.courses.libraryapi.controller.dto.ErrorResponse;
+import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.service.AuthorService;
 
@@ -23,17 +25,22 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO authorDTO){
-        var author = authorDTO.mappingForAuthor();
-        authorService.save(author);
+    public ResponseEntity<Object> save(@RequestBody AuthorDTO authorDTO){
+       try {
+           var author = authorDTO.mappingForAuthor();
+           authorService.save(author);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(author.getId())
-                .toUri();
+           URI location = ServletUriComponentsBuilder
+                   .fromCurrentRequest()
+                   .path("/{id}")
+                   .buildAndExpand(author.getId())
+                   .toUri();
 
-        return ResponseEntity.created(location).build();
+           return ResponseEntity.created(location).build();
+       } catch (DuplicateRecordException e){
+           var error = ErrorResponse.conflict(e.getMessage());
+           return ResponseEntity.status(error.status()).body(error);
+       }
     }
 
     @GetMapping("{id}")
@@ -72,25 +79,30 @@ public class AuthorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> update(
+    public ResponseEntity<Object> update(
             @PathVariable String id,
             @RequestBody AuthorDTO authorDTO
     ){
-        var idAuthor = UUID.fromString(id);
-        Optional<Author> authorOptional =  authorService.findById(idAuthor);
+        try {
+            var idAuthor = UUID.fromString(id);
+            Optional<Author> authorOptional =  authorService.findById(idAuthor);
 
-        if (authorOptional.isEmpty())
-            return ResponseEntity.notFound().build();
+            if (authorOptional.isEmpty())
+                return ResponseEntity.notFound().build();
 
-        Author author = authorOptional.get();
+            Author author = authorOptional.get();
 
-        author.setName(authorDTO.name());
-        author.setBirthDate(authorDTO.birthDate());
-        author.setNationality(authorDTO.nationality());
+            author.setName(authorDTO.name());
+            author.setBirthDate(authorDTO.birthDate());
+            author.setNationality(authorDTO.nationality());
 
-        authorService.update(author);
+            authorService.update(author);
 
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
+        } catch (DuplicateRecordException e){
+            var error = ErrorResponse.conflict(e.getMessage());
+            return ResponseEntity.status(error.status()).body(error);
+        }
     }
 
     @GetMapping

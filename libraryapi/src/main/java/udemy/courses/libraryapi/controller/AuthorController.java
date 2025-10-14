@@ -23,14 +23,14 @@ public class AuthorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO author){
-        var AuthorEntity = author.mappingForAuthor();
-        authorService.save(AuthorEntity);
+    public ResponseEntity<Void> save(@RequestBody AuthorDTO authorDTO){
+        var author = authorDTO.mappingForAuthor();
+        authorService.save(author);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(AuthorEntity.getId())
+                .buildAndExpand(author.getId())
                 .toUri();
 
         return ResponseEntity.created(location).build();

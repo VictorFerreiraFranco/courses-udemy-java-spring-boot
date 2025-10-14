@@ -1,5 +1,6 @@
 package udemy.courses.libraryapi.validator;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
 import udemy.courses.libraryapi.model.Author;
@@ -8,13 +9,10 @@ import udemy.courses.libraryapi.repository.AuthorRepository;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class AuthorValidator {
 
-    private AuthorRepository repository;
-
-    public AuthorValidator(AuthorRepository repository) {
-        this.repository = repository;
-    }
+    private final AuthorRepository repository;
 
     public void validate(Author author) {
 

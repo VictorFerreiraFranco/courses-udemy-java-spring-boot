@@ -1,5 +1,6 @@
 package udemy.courses.libraryapi.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
@@ -12,17 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final BookRepository bookRepository;
-
-    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator, BookRepository bookRepository) {
-        this.authorRepository = authorRepository;
-        this.authorValidator = authorValidator;
-        this.bookRepository = bookRepository;
-    }
 
     public Author save(Author author) {
         authorValidator.validate(author);

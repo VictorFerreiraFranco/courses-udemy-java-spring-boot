@@ -1,5 +1,6 @@
 package udemy.courses.libraryapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,13 +18,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
+@RequiredArgsConstructor
 public class AuthorController {
 
     private final AuthorService authorService;
-
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody AuthorDTO authorDTO){

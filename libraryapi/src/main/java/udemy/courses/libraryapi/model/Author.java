@@ -36,8 +36,8 @@ public class Author {
     private String nationality;
 
     @OneToMany(
-        mappedBy = "author",
-        cascade = CascadeType.ALL
+        mappedBy = "author"
+//        cascade = CascadeType.ALL
     )
     private List<Book> books;
 

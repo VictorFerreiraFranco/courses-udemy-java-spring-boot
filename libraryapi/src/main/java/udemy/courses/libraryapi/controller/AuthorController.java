@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import udemy.courses.libraryapi.controller.dto.AuthorDTO;
 import udemy.courses.libraryapi.controller.dto.ErrorResponse;
 import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
+import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.service.AuthorService;
 
@@ -43,41 +44,6 @@ public class AuthorController {
        }
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id){
-        var idAuthor = UUID.fromString(id);
-        Optional<Author> authorOptional =  authorService.findById(idAuthor);
-
-        if (authorOptional.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Author author = authorOptional.get();
-
-        AuthorDTO dto = new AuthorDTO(
-                author.getId(),
-                author.getName(),
-                author.getBirthDate(),
-                author.getNationality()
-        );
-
-        return ResponseEntity.ok(dto);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id){
-        var idAuthor = UUID.fromString(id);
-        Optional<Author> authorOptional =  authorService.findById(idAuthor);
-
-        if (authorOptional.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        Author author = authorOptional.get();
-
-        authorService.delete(author);
-
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("{id}")
     public ResponseEntity<Object> update(
             @PathVariable String id,
@@ -103,6 +69,46 @@ public class AuthorController {
             var error = ErrorResponse.conflict(e.getMessage());
             return ResponseEntity.status(error.status()).body(error);
         }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> delete(@PathVariable String id){
+        try {
+            var idAuthor = UUID.fromString(id);
+            Optional<Author> authorOptional =  authorService.findById(idAuthor);
+
+            if (authorOptional.isEmpty())
+                return ResponseEntity.notFound().build();
+
+            Author author = authorOptional.get();
+
+            authorService.delete(author);
+
+            return ResponseEntity.noContent().build();
+        } catch (OperationNotPermittedException e){
+            var error = ErrorResponse.responseDefault(e.getMessage());
+            return ResponseEntity.status(error.status()).body(error);
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id){
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOptional =  authorService.findById(idAuthor);
+
+        if (authorOptional.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Author author = authorOptional.get();
+
+        AuthorDTO dto = new AuthorDTO(
+                author.getId(),
+                author.getName(),
+                author.getBirthDate(),
+                author.getNationality()
+        );
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping

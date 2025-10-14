@@ -1,8 +1,10 @@
 package udemy.courses.libraryapi.service;
 
 import org.springframework.stereotype.Service;
+import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.repository.AuthorRepository;
+import udemy.courses.libraryapi.repository.BookRepository;
 import udemy.courses.libraryapi.validator.AuthorValidator;
 
 import java.util.List;
@@ -14,10 +16,12 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
+    private final BookRepository bookRepository;
 
-    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
+    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.authorValidator = authorValidator;
+        this.bookRepository = bookRepository;
     }
 
     public Author save(Author author) {
@@ -35,6 +39,9 @@ public class AuthorService {
     }
 
     public void delete(Author author) {
+        if (existsBook(author))
+            throw new OperationNotPermittedException("Author has books");
+
         authorRepository.delete(author);
     }
 
@@ -53,5 +60,9 @@ public class AuthorService {
             return authorRepository.findByNationality(nationality);
 
         return authorRepository.findAll();
+    }
+
+    public boolean existsBook(Author author) {
+        return bookRepository.existsByAuthor(author);
     }
 }

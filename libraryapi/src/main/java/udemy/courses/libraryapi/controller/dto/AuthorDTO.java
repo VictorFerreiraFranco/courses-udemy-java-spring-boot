@@ -3,8 +3,10 @@ package udemy.courses.libraryapi.controller.dto;
 import udemy.courses.libraryapi.model.Author;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record AuthorDTO(
+        UUID id,
         String name,
         LocalDate birthDate,
         String nationality

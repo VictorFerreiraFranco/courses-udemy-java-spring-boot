@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.repository.AuthorRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class AuthorService {
 
@@ -13,7 +16,7 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    public Author save(Author author) {
-        return authorRepository.save(author);
-    }
+    public Author save(Author author) { return authorRepository.save(author); }
+
+    public Optional<Author> findById(UUID id) { return authorRepository.findById(id); }
 }

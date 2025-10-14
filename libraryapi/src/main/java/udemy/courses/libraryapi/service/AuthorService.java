@@ -1,6 +1,8 @@
 package udemy.courses.libraryapi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
@@ -8,6 +10,7 @@ import udemy.courses.libraryapi.repository.AuthorRepository;
 import udemy.courses.libraryapi.repository.BookRepository;
 import udemy.courses.libraryapi.validator.AuthorValidator;
 
+import javax.crypto.ExemptionMechanism;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,16 +49,20 @@ public class AuthorService {
     }
 
     public List<Author> search(String name, String nationality){
-        if (name != null && nationality != null)
-            return authorRepository.findByNameAndNationality(name, nationality);
 
-        if (name != null)
-            return authorRepository.findByName(name);
+        var author = new Author();
+        author.setName(name);
+        author.setNationality(nationality);
 
-        if (nationality != null)
-            return authorRepository.findByNationality(nationality);
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
-        return authorRepository.findAll();
+        Example<Author> authorExemple = Example.of(author, matcher);
+
+        return authorRepository.findAll(authorExemple);
     }
 
     public boolean existsBook(Author author) {

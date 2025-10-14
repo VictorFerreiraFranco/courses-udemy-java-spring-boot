@@ -1,5 +1,6 @@
 package udemy.courses.libraryapi.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody AuthorDTO authorDTO){
+    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO authorDTO){
        try {
            var author = authorDTO.mappingForAuthor();
            authorService.save(author);
@@ -45,7 +46,7 @@ public class AuthorController {
     @PutMapping("{id}")
     public ResponseEntity<Object> update(
             @PathVariable String id,
-            @RequestBody AuthorDTO authorDTO
+            @RequestBody @Valid AuthorDTO authorDTO
     ){
         try {
             var idAuthor = UUID.fromString(id);

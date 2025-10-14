@@ -8,6 +8,7 @@ import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.service.AuthorService;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,5 +69,24 @@ public class AuthorController {
         authorService.delete(author);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AuthorDTO>> search(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(required = false) String nacioanity
+    ){
+        List<Author> authors = authorService.search(name, nacioanity);
+        List<AuthorDTO> authorsDTO = authors
+                .stream()
+                .map(author -> new AuthorDTO(
+                        author.getId(),
+                        author.getName(),
+                        author.getBirthDate(),
+                        author.getNationality())
+                )
+                .toList();
+
+        return ResponseEntity.ok(authorsDTO);
     }
 }

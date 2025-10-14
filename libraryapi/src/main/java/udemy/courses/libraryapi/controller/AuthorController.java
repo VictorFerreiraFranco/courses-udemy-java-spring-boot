@@ -36,8 +36,7 @@ public class AuthorController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id)
-    {
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id){
         var idAuthor = UUID.fromString(id);
         Optional<Author> authorOptional =  authorService.findById(idAuthor);
 
@@ -54,5 +53,20 @@ public class AuthorController {
         );
 
         return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOptional =  authorService.findById(idAuthor);
+
+        if (authorOptional.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Author author = authorOptional.get();
+
+        authorService.delete(author);
+
+        return ResponseEntity.noContent().build();
     }
 }

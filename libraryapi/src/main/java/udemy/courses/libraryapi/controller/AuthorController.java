@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
-public class AuthorController {
+public class AuthorController implements GenericController {
 
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
@@ -33,11 +33,7 @@ public class AuthorController {
 
            authorService.save(author);
 
-           URI location = ServletUriComponentsBuilder
-                   .fromCurrentRequest()
-                   .path("/{id}")
-                   .buildAndExpand(author.getId())
-                   .toUri();
+           URI location = buildHeaderLocation(author.getId());
 
            return ResponseEntity.created(location).build();
        } catch (DuplicateRecordException e){

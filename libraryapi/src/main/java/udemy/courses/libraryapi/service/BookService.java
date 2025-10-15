@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static udemy.courses.libraryapi.repository.specification.BookSpecification.*;
+
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -30,9 +32,18 @@ public class BookService {
     }
 
     public List<Book> search(
-            String isbn, String nameAuthor, GenderBook gender, Integer publishYear
+            String isbn, String title, GenderBook gender, Integer publishYear, String nameAuthor
     ){
-        Specification<Book> specification = null;
+        Specification<Book> specification = (root, query, cb) -> cb.conjunction();
+
+        if (isbn != null)
+            specification = specification.and(isbnEqual(isbn));
+
+        if (title != null)
+            specification = specification.and(titleLike(title));
+
+        if (gender != null)
+            specification = specification.and(genderEqual(gender));
 
         return bookRepository.findAll(specification);
     }

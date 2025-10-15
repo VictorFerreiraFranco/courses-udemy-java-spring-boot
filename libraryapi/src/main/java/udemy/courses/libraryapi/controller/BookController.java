@@ -8,9 +8,11 @@ import udemy.courses.libraryapi.controller.dto.book.CreatedBookDTO;
 import udemy.courses.libraryapi.controller.dto.book.ResultSearchBookDTO;
 import udemy.courses.libraryapi.controller.mapper.BookMapper;
 import udemy.courses.libraryapi.model.Book;
+import udemy.courses.libraryapi.model.GenderBook;
 import udemy.courses.libraryapi.service.BookService;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -51,5 +53,23 @@ public class BookController implements GenericController {
                     return ResponseEntity.ok(dto);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build() );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ResultSearchBookDTO>> search(
+            @RequestParam(required = false) String isbn,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) GenderBook gender,
+            @RequestParam(value = "publish-year", required = false) Integer publishYear,
+            @RequestParam(value = "name-author", required = false) String nameAuthor
+    ) {
+        List<Book> bookList = bookService.search(isbn, title, gender, publishYear, nameAuthor);
+
+        List<ResultSearchBookDTO> bookListDTO = bookList
+                .stream()
+                .map(bookMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(bookListDTO);
     }
 }

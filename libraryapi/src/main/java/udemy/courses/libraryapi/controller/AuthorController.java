@@ -63,9 +63,7 @@ public class AuthorController implements GenericController {
         if (authorOptional.isEmpty())
             return ResponseEntity.notFound().build();
 
-        Author author = authorOptional.get();
-
-        authorService.delete(author);
+        authorService.delete(authorOptional.get());
 
         return ResponseEntity.noContent().build();
 

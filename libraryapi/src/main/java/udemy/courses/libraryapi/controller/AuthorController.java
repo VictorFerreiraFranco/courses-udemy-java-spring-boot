@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import udemy.courses.libraryapi.controller.dto.author.AuthorDTO;
 import udemy.courses.libraryapi.controller.dto.error.ErrorResponse;
+import udemy.courses.libraryapi.controller.mapper.AuthorMapper;
 import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
 import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
@@ -23,11 +24,13 @@ import java.util.UUID;
 public class AuthorController {
 
     private final AuthorService authorService;
+    private final AuthorMapper authorMapper;
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO authorDTO){
        try {
-           var author = authorDTO.mappingForAuthor();
+           Author author = authorMapper.toEntity(authorDTO);
+
            authorService.save(author);
 
            URI location = ServletUriComponentsBuilder
@@ -93,21 +96,15 @@ public class AuthorController {
     @GetMapping("{id}")
     public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id){
         var idAuthor = UUID.fromString(id);
-        Optional<Author> authorOptional =  authorService.findById(idAuthor);
 
-        if (authorOptional.isEmpty())
-            return ResponseEntity.notFound().build();
+        return authorService
+                .findById(idAuthor)
+                .map(author -> {
+                    AuthorDTO dto = authorMapper.toDTO(author);
+                    return ResponseEntity.ok(dto);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build() );
 
-        Author author = authorOptional.get();
-
-        AuthorDTO dto = new AuthorDTO(
-                author.getId(),
-                author.getName(),
-                author.getBirthDate(),
-                author.getNationality()
-        );
-
-        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
@@ -118,12 +115,7 @@ public class AuthorController {
         List<Author> authors = authorService.search(name, nacioanity);
         List<AuthorDTO> authorsDTO = authors
                 .stream()
-                .map(author -> new AuthorDTO(
-                        author.getId(),
-                        author.getName(),
-                        author.getBirthDate(),
-                        author.getNationality())
-                )
+                .map(authorMapper::toDTO)
                 .toList();
 
         return ResponseEntity.ok(authorsDTO);

@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-
         List<FieldError> fieldErrors = e.getFieldErrors();
 
         List<ErrorField> listErrorField = fieldErrors

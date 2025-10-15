@@ -15,7 +15,6 @@ public class AuthorValidator {
     private final AuthorRepository repository;
 
     public void validate(Author author) {
-
         if (authorExists(author))
             throw new DuplicateRecordException("Athor already exists");
     }

@@ -34,7 +34,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
         select l.gender
         from Book l
         join l.author a
-        where a.nationality = 'Brazilian'
+        where a.nationality = 'Brasileiro'
         order by l.gender
     """)
     List<String> findAllGenderAuthorBrazilian();

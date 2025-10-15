@@ -24,7 +24,5 @@ create table book
     updated_at       timestamp,
     id_user          uuid,
     id_author        uuid         not null references author (id),
-    constraint chk_gender check (gender in (
-                                            'FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE',
-                                            'BIOGRAPHY', 'SCIENCE'))
+    constraint chk_gender check (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE','BIOGRAPHY', 'SCIENCE'))
 )

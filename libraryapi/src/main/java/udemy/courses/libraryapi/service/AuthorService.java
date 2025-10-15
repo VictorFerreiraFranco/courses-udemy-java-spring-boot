@@ -29,7 +29,6 @@ public class AuthorService {
     }
 
     public void update (Author author) {
-
         if (author.getId() == null)
             throw new IllegalArgumentException("Author id is null");
 

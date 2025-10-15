@@ -32,7 +32,7 @@ public class BookService {
     }
 
     public List<Book> search(
-            String isbn, String title, GenderBook gender, Integer publishYear, String nameAuthor
+            String isbn, String title, GenderBook gender, Integer publishYear, String authorName
     ){
         Specification<Book> specification = (root, query, cb) -> cb.conjunction();
 
@@ -47,6 +47,9 @@ public class BookService {
 
         if (publishYear != null)
             specification = specification.and(publishYearEqual(publishYear));
+
+        if (authorName != null)
+            specification = specification.and(authorNameLike(authorName));
 
         return bookRepository.findAll(specification);
     }

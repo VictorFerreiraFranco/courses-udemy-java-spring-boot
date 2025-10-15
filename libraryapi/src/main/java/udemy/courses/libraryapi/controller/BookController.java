@@ -61,9 +61,9 @@ public class BookController implements GenericController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) GenderBook gender,
             @RequestParam(value = "publish-year", required = false) Integer publishYear,
-            @RequestParam(value = "name-author", required = false) String nameAuthor
+            @RequestParam(value = "author-name", required = false) String authorName
     ) {
-        List<Book> bookList = bookService.search(isbn, title, gender, publishYear, nameAuthor);
+        List<Book> bookList = bookService.search(isbn, title, gender, publishYear, authorName);
 
         List<ResultSearchBookDTO> bookListDTO = bookList
                 .stream()

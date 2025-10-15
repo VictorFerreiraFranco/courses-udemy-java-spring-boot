@@ -1,4 +1,4 @@
-package udemy.courses.libraryapi.controller.dto;
+package udemy.courses.libraryapi.controller.dto.author;
 
 import jakarta.validation.constraints.*;
 import udemy.courses.libraryapi.model.Author;

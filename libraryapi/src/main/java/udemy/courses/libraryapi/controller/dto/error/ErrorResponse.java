@@ -1,4 +1,4 @@
-package udemy.courses.libraryapi.controller.dto;
+package udemy.courses.libraryapi.controller.dto.error;
 
 import org.springframework.http.HttpStatus;
 

@@ -23,6 +23,14 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public void update(Book book) {
+
+        if (book.getId() == null)
+            throw new IllegalArgumentException("Book id is null");
+
+        bookRepository.save(book);
+    }
+
     public void delete(Book book) {
         bookRepository.delete(book);
     }
@@ -53,4 +61,6 @@ public class BookService {
 
         return bookRepository.findAll(specification);
     }
+
+
 }

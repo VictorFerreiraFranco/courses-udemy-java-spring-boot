@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import udemy.courses.libraryapi.controller.dto.book.CreatedBookDTO;
+import udemy.courses.libraryapi.controller.dto.book.BookDTO;
 import udemy.courses.libraryapi.controller.dto.book.ResultSearchBookDTO;
 import udemy.courses.libraryapi.controller.mapper.BookMapper;
 import udemy.courses.libraryapi.model.Book;
@@ -24,13 +24,37 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid CreatedBookDTO dto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid BookDTO dto) {
         Book book = bookMapper.toEntity(dto);
         bookService.save(book);
 
         URI location = buildHeaderLocation(book.getId());
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<Object> update(
+            @PathVariable String id,
+            @RequestBody @Valid BookDTO dto
+    ) {
+        return bookService.findById(UUID.fromString(id))
+                .map(book -> {
+
+                    Book bookAux = bookMapper.toEntity(dto);
+
+                    book.setIsbn(bookAux.getIsbn());
+                    book.setTitle(bookAux.getTitle());
+                    book.setGender(bookAux.getGender());
+                    book.setPublishDate(bookAux.getPublishDate());
+                    book.setPrice(bookAux.getPrice());
+                    book.setAuthor(bookAux.getAuthor());
+
+                    bookService.update(book);
+
+                    return ResponseEntity.noContent().build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build() );
     }
 
     @DeleteMapping("{id}")

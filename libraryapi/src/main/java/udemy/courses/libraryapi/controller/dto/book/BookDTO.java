@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CreatedBookDTO(
+public record BookDTO(
         @ISBN(message = "invalid ISBN")
         @NotBlank(message = "field required")
         String isbn,

@@ -4,12 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import udemy.courses.libraryapi.controller.dto.author.AuthorDTO;
-import udemy.courses.libraryapi.controller.dto.error.ErrorResponse;
 import udemy.courses.libraryapi.controller.mapper.AuthorMapper;
-import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
-import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
 import udemy.courses.libraryapi.service.AuthorService;
 
@@ -27,70 +23,56 @@ public class AuthorController implements GenericController {
     private final AuthorMapper authorMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid AuthorDTO authorDTO){
-       try {
-           Author author = authorMapper.toEntity(authorDTO);
+    public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO authorDTO) {
+        Author author = authorMapper.toEntity(authorDTO);
 
-           authorService.save(author);
+        authorService.save(author);
 
-           URI location = buildHeaderLocation(author.getId());
+        URI location = buildHeaderLocation(author.getId());
 
-           return ResponseEntity.created(location).build();
-       } catch (DuplicateRecordException e){
-           var error = ErrorResponse.conflict(e.getMessage());
-           return ResponseEntity.status(error.status()).body(error);
-       }
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(
+    public ResponseEntity<Void> update(
             @PathVariable String id,
             @RequestBody @Valid AuthorDTO authorDTO
-    ){
-        try {
-            var idAuthor = UUID.fromString(id);
-            Optional<Author> authorOptional =  authorService.findById(idAuthor);
+    ) {
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOptional = authorService.findById(idAuthor);
 
-            if (authorOptional.isEmpty())
-                return ResponseEntity.notFound().build();
+        if (authorOptional.isEmpty())
+            return ResponseEntity.notFound().build();
 
-            Author author = authorOptional.get();
+        Author author = authorOptional.get();
 
-            author.setName(authorDTO.name());
-            author.setBirthDate(authorDTO.birthDate());
-            author.setNationality(authorDTO.nationality());
+        author.setName(authorDTO.name());
+        author.setBirthDate(authorDTO.birthDate());
+        author.setNationality(authorDTO.nationality());
 
-            authorService.update(author);
+        authorService.update(author);
 
-            return ResponseEntity.noContent().build();
-        } catch (DuplicateRecordException e){
-            var error = ErrorResponse.conflict(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
-        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> delete(@PathVariable String id){
-        try {
-            var idAuthor = UUID.fromString(id);
-            Optional<Author> authorOptional =  authorService.findById(idAuthor);
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        var idAuthor = UUID.fromString(id);
+        Optional<Author> authorOptional = authorService.findById(idAuthor);
 
-            if (authorOptional.isEmpty())
-                return ResponseEntity.notFound().build();
+        if (authorOptional.isEmpty())
+            return ResponseEntity.notFound().build();
 
-            Author author = authorOptional.get();
+        Author author = authorOptional.get();
 
-            authorService.delete(author);
+        authorService.delete(author);
 
-            return ResponseEntity.noContent().build();
-        } catch (OperationNotPermittedException e){
-            var error = ErrorResponse.responseDefault(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
-        }
+        return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id){
+    public ResponseEntity<AuthorDTO> getDetails(@PathVariable String id) {
         var idAuthor = UUID.fromString(id);
 
         return authorService
@@ -99,7 +81,7 @@ public class AuthorController implements GenericController {
                     AuthorDTO dto = authorMapper.toDTO(author);
                     return ResponseEntity.ok(dto);
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build() );
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
@@ -107,7 +89,7 @@ public class AuthorController implements GenericController {
     public ResponseEntity<List<AuthorDTO>> search(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(required = false) String nacioanity
-    ){
+    ) {
         List<Author> authors = authorService.search(name, nacioanity);
         List<AuthorDTO> authorsDTO = authors
                 .stream()

@@ -3,11 +3,12 @@ package udemy.courses.libraryapi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import udemy.courses.libraryapi.controller.dto.book.CreatedBookDTO;
-import udemy.courses.libraryapi.controller.dto.error.ErrorResponse;
 import udemy.courses.libraryapi.controller.mapper.BookMapper;
-import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
 import udemy.courses.libraryapi.model.Book;
 import udemy.courses.libraryapi.service.BookService;
 
@@ -22,18 +23,13 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody @Valid CreatedBookDTO dto){
-        try {
-            Book book = bookMapper.toEntity(dto);
-            bookService.save(book);
+    public ResponseEntity<Void> save(@RequestBody @Valid CreatedBookDTO dto) {
+        Book book = bookMapper.toEntity(dto);
+        bookService.save(book);
 
-            URI location = buildHeaderLocation(book.getId());
+        URI location = buildHeaderLocation(book.getId());
 
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRecordException e) {
-            var error = ErrorResponse.conflict(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
-        }
+        return ResponseEntity.created(location).build();
     }
 
 }

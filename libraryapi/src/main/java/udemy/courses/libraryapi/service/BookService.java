@@ -1,6 +1,9 @@
 package udemy.courses.libraryapi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.model.Book;
@@ -42,8 +45,8 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public List<Book> search(
-            String isbn, String title, GenderBook gender, Integer publishYear, String authorName
+    public Page<Book> search(
+            String isbn, String title, GenderBook gender, Integer publishYear, String authorName, Integer page, Integer pageSize
     ){
         Specification<Book> specification = (root, query, cb) -> cb.conjunction();
 
@@ -62,7 +65,9 @@ public class BookService {
         if (authorName != null)
             specification = specification.and(authorNameLike(authorName));
 
-        return bookRepository.findAll(specification);
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        return bookRepository.findAll(specification, pageable);
     }
 
 

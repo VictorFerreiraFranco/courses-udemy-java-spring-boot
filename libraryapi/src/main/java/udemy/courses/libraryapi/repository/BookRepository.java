@@ -21,9 +21,6 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
 
     boolean existsByAuthor(Author author);
 
-
-
-
     // By test
 
     List<Book> findByAuthor(Author author);

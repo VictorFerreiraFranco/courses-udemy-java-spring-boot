@@ -2,6 +2,7 @@ package udemy.courses.libraryapi.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import udemy.courses.libraryapi.controller.dto.book.BookDTO;
@@ -12,7 +13,6 @@ import udemy.courses.libraryapi.model.GenderBook;
 import udemy.courses.libraryapi.service.BookService;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -80,20 +80,19 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResultSearchBookDTO>> search(
+    public ResponseEntity<Page<ResultSearchBookDTO>> search(
             @RequestParam(required = false) String isbn,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) GenderBook gender,
             @RequestParam(value = "publish-year", required = false) Integer publishYear,
-            @RequestParam(value = "author-name", required = false) String authorName
+            @RequestParam(value = "author-name", required = false) String authorName,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(value = "page-size", defaultValue = "10") Integer pageSize
     ) {
-        List<Book> bookList = bookService.search(isbn, title, gender, publishYear, authorName);
+        Page<Book> BookPage = bookService.search(isbn, title, gender, publishYear, authorName, page, pageSize);
 
-        List<ResultSearchBookDTO> bookListDTO = bookList
-                .stream()
-                .map(bookMapper::toDTO)
-                .toList();
+        Page<ResultSearchBookDTO> BookDTOPage = BookPage.map(bookMapper::toDTO);
 
-        return ResponseEntity.ok(bookListDTO);
+        return ResponseEntity.ok(BookDTOPage);
     }
 }

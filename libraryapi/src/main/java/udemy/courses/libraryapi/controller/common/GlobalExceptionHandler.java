@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import udemy.courses.libraryapi.controller.dto.error.ErrorField;
 import udemy.courses.libraryapi.controller.dto.error.ErrorResponse;
 import udemy.courses.libraryapi.exceptions.DuplicateRecordException;
+import udemy.courses.libraryapi.exceptions.FieldInvalidException;
 import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 
 import java.util.List;
@@ -40,6 +41,16 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleOperationNotPermittedException(OperationNotPermittedException e) {
         return ErrorResponse.responseDefault(e.getMessage());
+    }
+
+    @ExceptionHandler(FieldInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleFieldInvalidException(FieldInvalidException e) {
+        return new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "validation error",
+                List.of(new ErrorField(e.getField(), e.getMessage()))
+        );
     }
 
     @ExceptionHandler(RuntimeException.class)

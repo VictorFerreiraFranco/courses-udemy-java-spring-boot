@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.model.Book;
 import udemy.courses.libraryapi.model.GenderBook;
 import udemy.courses.libraryapi.repository.BookRepository;
+import udemy.courses.libraryapi.validator.BookValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,16 +19,18 @@ import static udemy.courses.libraryapi.repository.specification.BookSpecificatio
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BookValidator bookValidator;
 
     public Book save(Book book) {
+        bookValidator.validate(book);
         return bookRepository.save(book);
     }
 
     public void update(Book book) {
-
         if (book.getId() == null)
             throw new IllegalArgumentException("Book id is null");
 
+        bookValidator.validate(book);
         bookRepository.save(book);
     }
 

@@ -12,10 +12,19 @@ import udemy.courses.libraryapi.model.GenderBook;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-
 public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
+
+    Optional<Book> findByIsbn(String isbn);
+
+    boolean existsByAuthor(Author author);
+
+
+
+
+    // By test
 
     List<Book> findByAuthor(Author author);
 
@@ -56,6 +65,4 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
     @Transactional
     @Query("update Book set publishDate = ?1")
     void updatePublishDate(LocalDate date);
-
-    boolean existsByAuthor(Author author);
 }

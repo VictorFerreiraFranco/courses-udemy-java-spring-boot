@@ -3,6 +3,7 @@ package udemy.courses.libraryapi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import udemy.courses.libraryapi.controller.dto.author.AuthorDTO;
 import udemy.courses.libraryapi.controller.mapper.AuthorMapper;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class AuthorController implements GenericController {
 
     private final AuthorService authorService;

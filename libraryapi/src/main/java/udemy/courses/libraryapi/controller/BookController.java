@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import udemy.courses.libraryapi.controller.dto.book.BookDTO;
 import udemy.courses.libraryapi.controller.dto.book.ResultSearchBookDTO;
@@ -24,6 +25,7 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Void> save(@RequestBody @Valid BookDTO dto) {
         Book book = bookMapper.toEntity(dto);
         bookService.save(book);
@@ -34,6 +36,7 @@ public class BookController implements GenericController {
     }
 
     @PostMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Object> update(
             @PathVariable String id,
             @RequestBody @Valid BookDTO dto
@@ -58,6 +61,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Object> delete(@PathVariable String id) {
         return bookService.findById(UUID.fromString(id))
                 .map(book -> {
@@ -69,6 +73,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<ResultSearchBookDTO> get(@PathVariable String id) {
         return bookService.findById(UUID.fromString(id))
                 .map(book -> {
@@ -80,6 +85,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Page<ResultSearchBookDTO>> search(
             @RequestParam(required = false) String isbn,
             @RequestParam(required = false) String title,

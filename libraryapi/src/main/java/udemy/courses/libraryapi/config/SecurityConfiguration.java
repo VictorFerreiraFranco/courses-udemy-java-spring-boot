@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import udemy.courses.libraryapi.security.CustomUserDetailsService;
+import udemy.courses.libraryapi.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -45,20 +47,24 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    public UserDetailsService userDetailsService(
+//            PasswordEncoder passwordEncoder,
+            UserService userService
+    ) {
+//        UserDetails user_1 = User.builder()
+//                .username("user")
+//                .password(passwordEncoder.encode("123"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails user_2 = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder.encode("321"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user_1, user_2);
 
-        UserDetails user_1 = User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("123"))
-                .roles("USER")
-                .build();
-
-        UserDetails user_2 = User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("321"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user_1, user_2);
+        return new CustomUserDetailsService(userService);
     }
 }

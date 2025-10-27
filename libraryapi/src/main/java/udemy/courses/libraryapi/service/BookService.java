@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.model.Book;
 import udemy.courses.libraryapi.model.GenderBook;
 import udemy.courses.libraryapi.repository.BookRepository;
+import udemy.courses.libraryapi.repository.UserRepository;
+import udemy.courses.libraryapi.security.SecurityService;
 import udemy.courses.libraryapi.validator.BookValidator;
 
 import java.util.List;
@@ -23,9 +25,11 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookValidator bookValidator;
+    private final SecurityService securityService;
 
     public Book save(Book book) {
         bookValidator.validate(book);
+        book.setUser(securityService.getUserLoggedIn());
         return bookRepository.save(book);
     }
 

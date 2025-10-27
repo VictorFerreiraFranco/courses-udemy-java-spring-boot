@@ -4,11 +4,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import udemy.courses.libraryapi.controller.dto.author.AuthorDTO;
 import udemy.courses.libraryapi.controller.mapper.AuthorMapper;
 import udemy.courses.libraryapi.model.Author;
+import udemy.courses.libraryapi.model.User;
+import udemy.courses.libraryapi.security.SecurityService;
 import udemy.courses.libraryapi.service.AuthorService;
+import udemy.courses.libraryapi.service.UserService;
 
 import java.net.URI;
 import java.util.List;
@@ -29,7 +34,6 @@ public class AuthorController implements GenericController {
         Author author = authorMapper.toEntity(authorDTO);
 
         authorService.save(author);
-
         URI location = buildHeaderLocation(author.getId());
 
         return ResponseEntity.created(location).build();

@@ -6,8 +6,10 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import udemy.courses.libraryapi.exceptions.OperationNotPermittedException;
 import udemy.courses.libraryapi.model.Author;
+import udemy.courses.libraryapi.model.User;
 import udemy.courses.libraryapi.repository.AuthorRepository;
 import udemy.courses.libraryapi.repository.BookRepository;
+import udemy.courses.libraryapi.security.SecurityService;
 import udemy.courses.libraryapi.validator.AuthorValidator;
 
 import javax.crypto.ExemptionMechanism;
@@ -22,9 +24,11 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final BookRepository bookRepository;
+    private final SecurityService securityService;
 
     public Author save(Author author) {
         authorValidator.validate(author);
+        author.setUser(securityService.getUserLoggedIn());
         return authorRepository.save(author);
     }
 

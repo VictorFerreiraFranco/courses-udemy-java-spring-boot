@@ -28,12 +28,13 @@ public class SecurityConfiguration {
                     configurer.loginPage("/login").permitAll();
                 })
                 .authorizeHttpRequests(authorize-> {
-                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
+
                     authorize.requestMatchers("/authors/**").hasRole("ADMIN");
                     authorize.requestMatchers("/users/**").hasAnyRole("USER", "ADMIN");
-                    authorize.anyRequest().authenticated();
 
-//                    authorize.requestMatchers(HttpMethod.POST, "/authors/**").hasRole("ADMIN");
+                    authorize.anyRequest().authenticated();
                 })
                 .build();
     }
